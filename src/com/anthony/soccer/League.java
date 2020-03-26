@@ -11,10 +11,12 @@ public class League {
     }
 
     public void playGames(){
-        for (Game game : games) {
-            game.playGame();
-            System.out.printf(game.getGameResult());
+        for (int i = 0; i < games.length; i++) {
+            System.out.printf("-- Game " + (i+1) + "--\n");
+            games[i].playGame();
+            System.out.printf(games[i].getGameResult() + "\n");
         }
+
     }
 
     public static void main(String[] args) {
@@ -37,10 +39,11 @@ public class League {
     }
 
     private static Game[] getGames(Team[] teams){
-        Team homeTeam = teams[0];
-        Team awayTeam = teams[1];
-        Game game1 = new Game(  homeTeam, awayTeam);
-
-        return new Game[]{game1};
+         return new Game[]{
+                new Game(  teams[0], teams[1]),
+                new Game(  teams[1], teams[0]),
+                new Game(  teams[0], teams[1]),
+                new Game(  teams[1], teams[0]),
+        };
     }
 }
