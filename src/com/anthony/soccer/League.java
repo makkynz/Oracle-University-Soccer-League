@@ -6,6 +6,8 @@ public class League {
 
     private final Team[] teams;
     private final Game[] games;
+    public  static final int POINTS_FOR_WIN = 2;
+    public  static final int POINTS_FOR_DRAW = 1;
 
     public League(){
         teams = getTeams();

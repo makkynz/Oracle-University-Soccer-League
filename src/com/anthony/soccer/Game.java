@@ -41,6 +41,32 @@ public class Game {
         printer.accept(getAwayTeam().getName() + " vs " + getHomeTeam().getName() + "\n");
         int randNumOfGoals = (int)(Math.random()*((maxNumOfGoals)+1));
         GameUtils.addGameGoals(this, randNumOfGoals);
+        awardPoints();
+    }
+
+    public void awardPoints() {
+        Team winner = getWinner();
+
+        if(winner!=null){
+            winner.awardPoints(League.POINTS_FOR_WIN);
+        }else{
+            homeTeam.awardPoints(League.POINTS_FOR_DRAW);
+            awayTeam.awardPoints(League.POINTS_FOR_DRAW);
+        }
+    }
+
+    public Team getWinner() {
+        int homeTeamGoals = getTeamGoals(homeTeam);
+        int awayTeamGoals = getTeamGoals(awayTeam);
+
+        Team winner = null;
+
+        if(homeTeamGoals > awayTeamGoals){
+            winner = homeTeam;
+        }else if(homeTeamGoals < awayTeamGoals) {
+            winner = awayTeam;
+        }
+        return winner;
     }
 
     public void printGameResult(){
@@ -54,18 +80,16 @@ public class Game {
     }
 
     public void buildResultOutput(StringBuilder output) {
-        int homeTeamGoals = getTeamGoals(homeTeam);
-        int awayTeamGoals = getTeamGoals(awayTeam);
+        Team winner = getWinner();
 
-        if(homeTeamGoals > awayTeamGoals){
-            output.append("Winner: "+ homeTeam.getName());
-        }else if(homeTeamGoals < awayTeamGoals) {
-            output.append("Winner: "+ awayTeam.getName());
+        if(winner!=null){
+            output.append("Winner: "+ winner.getName());
         }else{
             output.append("Draw:");
         }
+
         output.append("\n");
-        output.append("Final Score: "+awayTeamGoals+ " - " +  homeTeamGoals);
+        output.append("Final Score: "+ getTeamGoals(homeTeam)+ " - " +  getTeamGoals(awayTeam));
         output.append("\n\n");
     }
 
