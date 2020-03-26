@@ -2,13 +2,15 @@ package com.anthony.soccer;
 
 import com.kenny.utilities.GameUtils;
 
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class Game {
     private Team homeTeam;
     private Team awayTeam;
     private Consumer<String> printer;
-    private Goal[] goals;
+    private List<Goal> goals;
 
 
     public Game(Team homeTeam, Team awayTeam, Consumer<String> printer) {
@@ -21,10 +23,10 @@ public class Game {
         return homeTeam;
     }
 
-    public Goal[] getGoals() {
+    public List<Goal> getGoals() {
         return goals;
     }
-    public void setGoals(Goal[] goals) {
+    public void setGoals(List<Goal> goals) {
         this.goals = goals;
     }
 
@@ -41,9 +43,48 @@ public class Game {
         GameUtils.addGameGoals(this, randNumOfGoals);
     }
 
-    public String getGameResult(){
+    public void printGameResult(){
         /*build output*/
         StringBuilder output = new StringBuilder();
+        buildResultOutput(output);
+        buildTeamsOutput(output);
+        buildGoalsOutput(output);
+
+        printer.accept(output.toString());
+    }
+
+    public void buildResultOutput(StringBuilder output) {
+        int homeTeamGoals = getTeamGoals(homeTeam);
+        int awayTeamGoals = getTeamGoals(awayTeam);
+
+        if(homeTeamGoals > awayTeamGoals){
+            output.append("Winner: "+ homeTeam.getName());
+        }else if(homeTeamGoals < awayTeamGoals) {
+            output.append("Winner: "+ awayTeam.getName());
+        }else{
+            output.append("Draw:");
+        }
+        output.append("\n");
+        output.append("Final Score: "+awayTeamGoals+ " - " +  homeTeamGoals);
+        output.append("\n\n");
+    }
+
+    private int getTeamGoals(Team team){
+        return goals.stream().filter(g->g.getTeam().equals(team)).collect(Collectors.toList()).size();
+    }
+
+    private void buildGoalsOutput(StringBuilder output) {
+        output.append("Goals :\n");
+
+        for (Goal goal : getGoals()) {
+            output.append(String.format("Goal scored after %s mins by %s of the %s \n",
+                    goal.getTime(),
+                    goal.getPlayer().getName(),
+                    goal.getTeam().getName()));
+        }
+    }
+
+    private void buildTeamsOutput(StringBuilder output) {
         output.append(getHomeTeam().getName() + ":\n");
 
         for (Player player : getHomeTeam().getPlayers()) {
@@ -58,20 +99,7 @@ public class Game {
         }
 
         output.append("\n");
-        output.append("Goals :\n");
-
-        for (Goal goal : getGoals()) {
-            output.append(String.format("Goal scored after %s mins by %s of the %s \n",
-                    goal.getTime(),
-                    goal.getPlayer().getName(),
-                    goal.getTeam().getName()));
-        }
-
-        return output.toString();
-
     }
-
-
 
 
 }

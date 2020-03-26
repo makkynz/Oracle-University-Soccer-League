@@ -16,7 +16,8 @@ public class League {
         for (int i = 0; i < games.length; i++) {
             System.out.printf("-- Game " + (i+1) + "--\n");
             games[i].playGame();
-            System.out.printf(games[i].getGameResult() + "\n");
+            games[i].printGameResult();
+            System.out.printf("\n");
         }
 
     }
