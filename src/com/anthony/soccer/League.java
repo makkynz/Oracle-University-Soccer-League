@@ -1,5 +1,7 @@
 package com.anthony.soccer;
 
+import java.util.function.Consumer;
+
 public class League {
 
     private final Team[] teams;
@@ -39,11 +41,15 @@ public class League {
     }
 
     private static Game[] getGames(Team[] teams){
-         return new Game[]{
-                new Game(  teams[0], teams[1]),
-                new Game(  teams[1], teams[0]),
-                new Game(  teams[0], teams[1]),
-                new Game(  teams[1], teams[0]),
+        Consumer<String> printer = System.out::println;
+
+        return new Game[]{
+                new Game( teams[0], teams[1], printer),
+                new Game( teams[1], teams[0], printer),
+                new Game( teams[0], teams[1], printer),
+                new Game( teams[1], teams[0], printer),
         };
     }
+
+
 }

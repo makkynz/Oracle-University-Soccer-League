@@ -2,14 +2,19 @@ package com.anthony.soccer;
 
 import com.kenny.utilities.GameUtils;
 
+import java.util.function.Consumer;
+
 public class Game {
     private Team homeTeam;
     private Team awayTeam;
+    private Consumer<String> printer;
     private Goal[] goals;
 
-    public Game(Team homeTeam, Team awayTeam) {
+
+    public Game(Team homeTeam, Team awayTeam, Consumer<String> printer) {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
+        this.printer = printer;
     }
 
     public Team getHomeTeam() {
@@ -31,6 +36,7 @@ public class Game {
         playGame(6);
     }
     public void playGame(int maxNumOfGoals){
+        printer.accept(getAwayTeam().getName() + " vs " + getHomeTeam().getName() + "\n");
         int randNumOfGoals = (int)(Math.random()*((maxNumOfGoals)+1));
         GameUtils.addGameGoals(this, randNumOfGoals);
     }
