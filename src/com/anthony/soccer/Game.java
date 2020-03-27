@@ -38,10 +38,12 @@ public class Game {
         playGame(6);
     }
     public void playGame(int maxNumOfGoals){
-        printer.accept(getAwayTeam().getName() + " vs " + getHomeTeam().getName() + "\n");
+        printer.accept("\n--- Game: " + getAwayTeam().getName() + " vs " + getHomeTeam().getName() +"---");
         int randNumOfGoals = (int)(Math.random()*((maxNumOfGoals)+1));
         GameUtils.addGameGoals(this, randNumOfGoals);
         awardPoints();
+        homeTeam.addGoals(getTeamGoals(homeTeam));
+        awayTeam.addGoals(getTeamGoals(awayTeam));
     }
 
     public void awardPoints() {
@@ -49,7 +51,7 @@ public class Game {
 
         if(winner!=null){
             winner.awardPoints(League.POINTS_FOR_WIN);
-        }else{
+        }else{ //draw
             homeTeam.awardPoints(League.POINTS_FOR_DRAW);
             awayTeam.awardPoints(League.POINTS_FOR_DRAW);
         }
@@ -70,59 +72,50 @@ public class Game {
     }
 
     public void printGameResult(){
-        /*build output*/
-        StringBuilder output = new StringBuilder();
-        buildResultOutput(output);
-        buildTeamsOutput(output);
-        buildGoalsOutput(output);
-
-        printer.accept(output.toString());
+        printResultSummary();
+        printTeams();
+        printGoals();
     }
 
-    public void buildResultOutput(StringBuilder output) {
+    public void printResultSummary() {
         Team winner = getWinner();
 
         if(winner!=null){
-            output.append("Winner: "+ winner.getName());
+            printer.accept("Winner: "+ winner.getName());
         }else{
-            output.append("Draw:");
+            printer.accept("Draw:");
         }
 
-        output.append("\n");
-        output.append("Final Score: "+ getTeamGoals(homeTeam)+ " - " +  getTeamGoals(awayTeam));
-        output.append("\n\n");
+        printer.accept("Final Score: "+ getTeamGoals(homeTeam)+ " - " +  getTeamGoals(awayTeam));
     }
 
     private int getTeamGoals(Team team){
         return goals.stream().filter(g->g.getTeam().equals(team)).collect(Collectors.toList()).size();
     }
 
-    private void buildGoalsOutput(StringBuilder output) {
-        output.append("Goals :\n");
+    private void printGoals() {
+        printer.accept("\nGoals");
 
         for (Goal goal : getGoals()) {
-            output.append(String.format("Goal scored after %s mins by %s of the %s \n",
+            printer.accept(String.format("Goal scored after %s mins by %s of the %s",
                     goal.getTime(),
                     goal.getPlayer().getName(),
                     goal.getTeam().getName()));
         }
     }
 
-    private void buildTeamsOutput(StringBuilder output) {
-        output.append(getHomeTeam().getName() + ":\n");
+    private void printTeams() {
+        printer.accept("\n"+getHomeTeam().getName() );
 
         for (Player player : getHomeTeam().getPlayers()) {
-            output.append(player.getName() + "\n");
+            printer.accept(player.getName() );
         }
 
-        output.append("\n");
-        output.append(getAwayTeam().getName() + ":\n");
+        printer.accept("\n"+getAwayTeam().getName() );
 
         for (Player player : getAwayTeam().getPlayers()) {
-            output.append(player.getName() + "\n");
+            printer.accept(player.getName());
         }
-
-        output.append("\n");
     }
 
 

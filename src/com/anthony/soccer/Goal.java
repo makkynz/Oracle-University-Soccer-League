@@ -11,8 +11,6 @@ public class Goal {
         this.time = time;
     }
 
-
-
     public Player getPlayer() {
         return player;
     }
